@@ -37,7 +37,7 @@ options = {
 	viewSize: {x: G.HEIGHT, y: G.WIDTH},
 	seed: 2,
     isPlayingBgm: true,
-	theme: "dark"
+	theme: "crt"
 };
 
 // Define Player object and player container
@@ -110,10 +110,9 @@ function update() {
 
 	// Add launcher reticle
 	if (!player.isMoving) {
-		//launcher.pos = vec(player.pos.x, player.pos.y - G.RETICLE_OFFSET);
 		color("black");
 		char("b", launcher.pos);
-		launcher.pos = rotate(player.pos.x, player.pos.y, launcher.pos.x, launcher.pos.y, G.ROTATION_RATE)
+		launcher.pos = rotate(player.pos.x, player.pos.y, launcher.pos.x, launcher.pos.y, G.ROTATION_RATE * difficulty)
 	}
 
 	// Update and draw player
@@ -139,6 +138,7 @@ function update() {
 
 	// Draw enemy spawn zone
 	color("yellow");
+	// Kill player if they touch the spawn zone!
 	if (box(G.HEIGHT/2, G.WIDTH/2, 6, 6).isColliding.char.a) {
 		play("explosion");
 		end();
@@ -150,6 +150,7 @@ function update() {
         color("black");
 
 		const isCollidingWithPlayer = char("c", e.pos).isColliding.char.a;
+		const isOutOfBounds = !e.pos.isInRect(0, 0, G.WIDTH, G.HEIGHT);
 
 		// On collision, play sound and add to score
 		if (isCollidingWithPlayer) { 
@@ -157,7 +158,13 @@ function update() {
 			addScore(10 * waveCount, e.pos)
 		}
 
-        return (isCollidingWithPlayer);
+		// If enemy escapes, play sound and decrease lives
+		if (isOutOfBounds) {
+			play("select");
+			// Decrement lives
+		}
+
+        return (isCollidingWithPlayer || isOutOfBounds);
     });
 	// Spawn enemies
 	if (enemies.length === 0) {
