@@ -10,6 +10,10 @@ characters = [
 llccll
 llccll
   ll
+`,`
+  rr
+ r  r
+  rr
 `
 ];
 
@@ -17,8 +21,9 @@ llccll
 const G = {
 	WIDTH: 125,
 	HEIGHT: 125,
-	LINE_OFFSET: 5,
-	ROTATION_RATE: .05
+	RETICLE_OFFSET: 20,
+	ROTATION_RATE: 3,
+	PLAYER_SPEED: 20
 }
 
 // Set game options
@@ -45,9 +50,7 @@ let player;
 // Define Player object and player container
 /**
  * @typedef {{
- * x: number,
- * y: number,
- * rotate: number
+ * pos: Vector
  * }} Launcher
  */
 
@@ -67,21 +70,21 @@ function update() {
 			isMoving: false
 		}
 
-		// Init launch trajectory line
+		// Init launch trajectory reticle
 		launcher = {
-			x: player.pos.x,
-			y: player.pos.y,
-			rotate: 3
+			pos: vec(player.pos.x, player.pos.y - G.RETICLE_OFFSET),
 		}
 	}
 
 	/**----------Update function START!----------**/
 
 	
-	// Add trajectory line
+	// Add launcher reticle
 	if (!player.isMoving) {
-		bar(launcher.x, launcher.y, 10, 1.5, launcher.rotate, 1)
-		launcher.rotate += G.ROTATION_RATE;
+		//launcher.pos = vec(player.pos.x, player.pos.y - G.RETICLE_OFFSET);
+		color("black");
+		char("b", launcher.pos);
+		launcher.pos = rotate(player.pos.x, player.pos.y, launcher.pos.x, launcher.pos.y, G.ROTATION_RATE)
 	}
 
 	// Update and draw player
@@ -92,7 +95,25 @@ function update() {
 	// Move player on left click 
 	if (pointer.isJustPressed) {
 		player.isMoving = true;
-		// Move player to tip of trajectory line
+		play("powerUp");
+		// Move player to launcher point
+		for (let i = 0; i < G.PLAYER_SPEED; i++) {
+			player.pos.x += 3 * Math.cos(player.pos.angleTo(launcher.pos));
+			player.pos.y += 3 * Math.sin(player.pos.angleTo(launcher.pos));
+			char("a", player.pos); // Redraw player for teleport effect
+			
+		}
+
+		launcher.pos = vec(player.pos.x, player.pos.y - G.RETICLE_OFFSET);
 		player.isMoving = false; 
 	}
+}
+
+function rotate(cx, cy, x, y, angle) {
+    var radians = (Math.PI / 180) * angle,
+        cos = Math.cos(radians),
+        sin = Math.sin(radians),
+        nx = (cos * (x - cx)) + (sin * (y - cy)) + cx,
+        ny = (cos * (y - cy)) - (sin * (x - cx)) + cy;
+    return vec(nx, ny);
 }
