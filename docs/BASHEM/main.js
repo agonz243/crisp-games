@@ -28,7 +28,8 @@ const G = {
 	RETICLE_OFFSET: 20,
 	ROTATION_RATE: 3,
 	PLAYER_SPEED: 20,
-	ENEMY_SPEED: 0.05
+	ENEMY_SPEED: 0.05,
+	MAX_ENEMIES: 3,
 }
 
 // Set game options
@@ -77,6 +78,12 @@ let launcher;
  */
 let enemies;
 
+// Define wave count to keep track of score
+/**
+ * @type { number }
+ */
+ let waveCount;
+
 
 function update() {
 	/**----------Init function START!----------**/
@@ -93,8 +100,9 @@ function update() {
 			pos: vec(player.pos.x, player.pos.y - G.RETICLE_OFFSET),
 		}
 
-		// Init enemies
+		// Init enemies and wave count
 		enemies = [];
+		waveCount = 0;
 	}
 
 	/**----------Update function START!----------**/
@@ -131,7 +139,6 @@ function update() {
 
 	// Draw enemy spawn zone
 	color("yellow");
-	//box(G.HEIGHT/2, G.WIDTH/2, 6, 6);
 	if (box(G.HEIGHT/2, G.WIDTH/2, 6, 6).isColliding.char.a) {
 		play("explosion");
 		end();
@@ -139,20 +146,28 @@ function update() {
 
 	// Update enemies and remove them when necessary
 	remove(enemies, (e) => {
-        e.pos.addWithAngle(e.angle, G.ENEMY_SPEED);
+        e.pos.addWithAngle(e.angle, G.ENEMY_SPEED * difficulty);
         color("black");
 
 		const isCollidingWithPlayer = char("c", e.pos).isColliding.char.a;
+
+		// On collision, play sound and add to score
+		if (isCollidingWithPlayer) { 
+			play("coin");
+			addScore(10 * waveCount, e.pos)
+		}
 
         return (isCollidingWithPlayer);
     });
 	// Spawn enemies
 	if (enemies.length === 0) {
-        for (let i = 0; i < 3; i++) {
+        for (let i = 0; i < G.MAX_ENEMIES * difficulty; i++) {
             const posX = G.WIDTH/2;
             const posY = G.HEIGHT/2;
             enemies.push({ pos: vec(posX, posY), angle: rnd(0, 360)})
         }
+
+		waveCount++ // Increment wave count
     }
 }
 
