@@ -1,4 +1,4 @@
-title = "JOUST";
+title = "BASH 'EM";
 
 description = `
  Defend your walls!
@@ -29,7 +29,7 @@ const G = {
 // Set game options
 options = {
 	viewSize: {x: G.HEIGHT, y: G.WIDTH},
-	seed: 1,
+	seed: 2,
     isPlayingBgm: true,
 	theme: "dark"
 };
@@ -103,12 +103,13 @@ function update() {
 			char("a", player.pos); // Redraw player for teleport effect
 			
 		}
-
+		// Reset reticle position
 		launcher.pos = vec(player.pos.x, player.pos.y - G.RETICLE_OFFSET);
 		player.isMoving = false; 
 	}
 }
 
+// Function to rotate a point about an origin
 function rotate(cx, cy, x, y, angle) {
     var radians = (Math.PI / 180) * angle,
         cos = Math.cos(radians),
