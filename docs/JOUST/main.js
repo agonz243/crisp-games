@@ -17,7 +17,8 @@ llccll
 const G = {
 	WIDTH: 125,
 	HEIGHT: 125,
-	LINE_OFFSET: 5
+	LINE_OFFSET: 5,
+	ROTATION_RATE: .05
 }
 
 // Set game options
@@ -80,11 +81,18 @@ function update() {
 	// Add trajectory line
 	if (!player.isMoving) {
 		bar(launcher.x, launcher.y, 10, 1.5, launcher.rotate, 1)
-		launcher.rotate += 0.005
+		launcher.rotate += G.ROTATION_RATE;
 	}
 
 	// Update and draw player
 	char("a", player.pos);
 	player.pos.clamp(0, G.WIDTH, 0, G.HEIGHT);
 	color("black");
+
+	// Move player on left click 
+	if (pointer.isJustPressed) {
+		player.isMoving = true;
+		// Move player to tip of trajectory line
+		player.isMoving = false; 
+	}
 }
