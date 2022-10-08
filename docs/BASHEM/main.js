@@ -14,6 +14,10 @@ llccll
   rr
  r  r
   rr
+`, `
+y    y
+ yRRy
+y    y
 `
 ];
 
@@ -23,7 +27,8 @@ const G = {
 	HEIGHT: 125,
 	RETICLE_OFFSET: 20,
 	ROTATION_RATE: 3,
-	PLAYER_SPEED: 20
+	PLAYER_SPEED: 20,
+	ENEMY_SPEED: 0.05
 }
 
 // Set game options
@@ -59,6 +64,19 @@ let player;
  */
 let launcher;
 
+// Define enemy object and enemy container
+/**
+ * @typedef {{
+ * pos: Vector,
+ * angle: number
+ * }} Enemy
+ */
+
+/**
+ * @type { Enemy [] }
+ */
+let enemies;
+
 
 function update() {
 	/**----------Init function START!----------**/
@@ -74,11 +92,14 @@ function update() {
 		launcher = {
 			pos: vec(player.pos.x, player.pos.y - G.RETICLE_OFFSET),
 		}
+
+		// Init enemies
+		enemies = [];
 	}
 
 	/**----------Update function START!----------**/
 
-	
+
 	// Add launcher reticle
 	if (!player.isMoving) {
 		//launcher.pos = vec(player.pos.x, player.pos.y - G.RETICLE_OFFSET);
@@ -107,6 +128,32 @@ function update() {
 		launcher.pos = vec(player.pos.x, player.pos.y - G.RETICLE_OFFSET);
 		player.isMoving = false; 
 	}
+
+	// Draw enemy spawn zone
+	color("yellow");
+	//box(G.HEIGHT/2, G.WIDTH/2, 6, 6);
+	if (box(G.HEIGHT/2, G.WIDTH/2, 6, 6).isColliding.char.a) {
+		play("explosion");
+		end();
+	}
+
+	// Update enemies and remove them when necessary
+	remove(enemies, (e) => {
+        e.pos.addWithAngle(e.angle, G.ENEMY_SPEED);
+        color("black");
+
+		const isCollidingWithPlayer = char("c", e.pos).isColliding.char.a;
+
+        return (isCollidingWithPlayer);
+    });
+	// Spawn enemies
+	if (enemies.length === 0) {
+        for (let i = 0; i < 3; i++) {
+            const posX = G.WIDTH/2;
+            const posY = G.HEIGHT/2;
+            enemies.push({ pos: vec(posX, posY), angle: rnd(0, 360)})
+        }
+    }
 }
 
 // Function to rotate a point about an origin
