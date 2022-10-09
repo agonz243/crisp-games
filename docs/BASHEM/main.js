@@ -115,7 +115,7 @@ function update() {
 	/**----------Update function START!----------**/
 
 	// Display lives on screen, end game if the player drops below 0
-	text(`Lives:${playerLives}`, 30, 3);
+	text(`Lives:${playerLives}`, 5, 120);
 	if (playerLives <= 0) {
 		end();
 	}
