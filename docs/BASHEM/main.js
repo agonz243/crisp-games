@@ -84,16 +84,23 @@ let enemies;
  */
  let waveCount;
 
+ // Define life count to keep track of health
+/**
+ * @type { number }
+ */
+ let playerLives;
+
 
 function update() {
 	/**----------Init function START!----------**/
 
 	if (!ticks) {
-		// Init player
+		// Init player and lives
 		player = {
 			pos: vec(G.WIDTH/2, G.HEIGHT - G.HEIGHT/4),
 			isMoving: false
 		}
+		playerLives = 3;
 
 		// Init launch trajectory reticle
 		launcher = {
@@ -107,6 +114,11 @@ function update() {
 
 	/**----------Update function START!----------**/
 
+	// Display lives on screen, end game if the player drops below 0
+	text(`Lives:${playerLives}`, 30, 3);
+	if (playerLives <= 0) {
+		end();
+	}
 
 	// Add launcher reticle
 	if (!player.isMoving) {
@@ -162,6 +174,7 @@ function update() {
 		if (isOutOfBounds) {
 			play("select");
 			// Decrement lives
+			playerLives--
 		}
 
         return (isCollidingWithPlayer || isOutOfBounds);
