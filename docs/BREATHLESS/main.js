@@ -165,6 +165,8 @@ function update() {
 			play("lucky");
 			play("explosion");
 			end();
+		} else if (!player.isBreathing && !c.isAwake) {
+			score -= 1;
 		} else if (c.isAwake) {
 			score += 1;
 		}
