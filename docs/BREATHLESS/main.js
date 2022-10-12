@@ -31,6 +31,10 @@ RRR
  rrrr
 rlbblr
  rrrr
+`,`
+ rrrr
+rllllr
+ bbll
 `
 ];
 
@@ -144,7 +148,7 @@ function update() {
 
 		// Draw creature
         color("black");
-		draw_creature(c.pos);
+		draw_creature(c.pos, 'c');
 
 		const isOutOfBounds = c.pos.x < -10;
 
@@ -156,6 +160,8 @@ function update() {
 
 		// If player is breathing while creature is awake GAME OVER
 		if (player.isBreathing && c.isAwake) {
+			draw_creature(c.pos, 'd'); // Draw alerted sprite
+			char('b', vec(c.pos.x, c.pos.y - 7));
 			play("lucky");
 			play("explosion");
 			end();
@@ -182,10 +188,10 @@ function update() {
 }
 
 // Helper function to draw all creature sprites
-function draw_creature(pos) {
+function draw_creature(pos, cha) {
 	// Draw left eye
-	char('c', pos);
+	char(cha, pos);
 
 	// Draw right eye
-	char('c', pos.x + 10, pos.y);
+	char(cha, pos.x + 10, pos.y);
 }
