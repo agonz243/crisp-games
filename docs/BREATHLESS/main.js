@@ -150,12 +150,14 @@ function update() {
 
 		// If enemy starts to pass threshold, wake it
 		// creatures are dangerous when awake
-		if (c.pos.x <= 50) {
+		if (c.pos.x <= 45) {
 			c.isAwake = true;
 		}
 
 		// If player is breathing while creature is awake GAME OVER
 		if (player.isBreathing && c.isAwake) {
+			play("lucky");
+			play("explosion");
 			end();
 		}
 
