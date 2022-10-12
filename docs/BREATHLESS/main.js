@@ -72,6 +72,14 @@ let creaturePos; // For drawing sprite properly
 // Define message that indicates if player is breathing
 let breathMessage;
 
+// Define coordinates for danger threshold
+let threshold = {
+	x1: G.WIDTH / 2,
+	y1: G.HEIGHT / 4,
+	x2: G.HEIGHT / 2,
+	y2:G.HEIGHT - G.HEIGHT / 4
+}
+
 function update() {
 	/**----------Init function START!----------**/
 	
@@ -91,6 +99,10 @@ function update() {
 	}
 
 	/**----------Update function START!----------**/
+
+	// Draw danger threshold
+	color("yellow");
+	line(threshold.x1, threshold.y1, threshold.x2, threshold.y2)
 
 	// Draw player
 	color("black");
