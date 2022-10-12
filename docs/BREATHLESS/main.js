@@ -58,7 +58,8 @@ let player;
 /**
  * @typedef {{
  * pos: Vector,
- * speed: number
+ * speed: number,
+ * isAwake: boolean
  * }} Creature
  */
 
@@ -102,7 +103,7 @@ function update() {
 
 	// Draw danger threshold
 	color("yellow");
-	line(threshold.x1, threshold.y1, threshold.x2, threshold.y2)
+	line(threshold.x1, threshold.y1, threshold.x2, threshold.y2);
 
 	// Draw player
 	color("black");
@@ -147,6 +148,17 @@ function update() {
 
 		const isOutOfBounds = c.pos.x < -10;
 
+		// If enemy starts to pass threshold, wake it
+		// creatures are dangerous when awake
+		if (c.pos.x <= 50) {
+			c.isAwake = true;
+		}
+
+		// If player is breathing while creature is awake GAME OVER
+		if (player.isBreathing && c.isAwake) {
+			end();
+		}
+
         return isOutOfBounds;
     });
 	// Spawn enemies
@@ -157,7 +169,8 @@ function update() {
 			const posY = creaturePos.y;
             creatures.push({ 
 				pos: vec(posX, posY), 
-				speed: rnd(G.CREATURE_SPEED_MIN, G.CREATURE_SPEED_MAX)
+				speed: rnd(G.CREATURE_SPEED_MIN, G.CREATURE_SPEED_MAX),
+				isAwake: false
 			})
         }
     }
