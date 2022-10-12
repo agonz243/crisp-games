@@ -159,6 +159,8 @@ function update() {
 			play("lucky");
 			play("explosion");
 			end();
+		} else if (c.isAwake) {
+			score += 1;
 		}
 
         return isOutOfBounds;
