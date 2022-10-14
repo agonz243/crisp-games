@@ -165,7 +165,7 @@ function update() {
 			play("lucky");
 			play("explosion");
 			end();
-		} else if (!player.isBreathing && !c.isAwake) {
+		} else if (!player.isBreathing && !c.isAwake && score > 0) {
 			score -= 1; // Deduct points if the player just holds breath forever
 		} else if (c.isAwake) {
 			score += 1; // Add points on successful sleuthage
